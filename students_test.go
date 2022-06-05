@@ -194,20 +194,21 @@ func TestMatrixNew(t *testing.T) {
 	}
 
 	for i, v := range tData {
+		var errAsString string
+		var vErrAsString string
+
 		m, err := New(v.S)
-		if err != nil || v.Err != nil {
-			var errAsString string
-			var vErrAsString string
-			if err != nil {
-				errAsString = err.Error()
-			}
-			if v.Err != nil {
-				vErrAsString = v.Err.Error()
-			}
-			if errAsString != vErrAsString {
-				t.Errorf("Expected error: %s, got %s. Index = %d", v.Err, err, i)
-			}
-		} else {
+
+		if err != nil {
+			errAsString = err.Error()
+		}
+		if v.Err != nil {
+			vErrAsString = v.Err.Error()
+		}
+
+		if errAsString != vErrAsString {
+			t.Errorf("Expected error: %s, got %s. Index = %d", v.Err, err, i)
+		} else if err == nil {
 			mV := *m
 			if !CompareMaxtrix(mV, v.Expected) {
 				t.Errorf(errorExpectedV, v.Expected, mV, i)
